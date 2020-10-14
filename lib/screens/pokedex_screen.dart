@@ -1,17 +1,11 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:pokedex/services/pokeapi_co.dart';
 import 'package:pokedex/widgets/pokedex_entry_grid.dart';
 import 'package:pokedex/widgets/pokedex_entry_list.dart';
 
 class PokeDexScreen extends StatefulWidget {
   @override
   _PokeDexScreenState createState() => _PokeDexScreenState();
-}
-
-Future<List> fetchPokemons() async {
-  var result = await http.get('https://pokeapi.co/api/v2/pokemon/?limit=151');
-  return json.decode(result.body)['results'];
 }
 
 class _PokeDexScreenState extends State<PokeDexScreen> {

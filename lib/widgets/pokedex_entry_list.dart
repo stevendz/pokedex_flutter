@@ -1,10 +1,9 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/screens/pokemon_details_screen.dart';
 import 'package:pokedex/services/capitalize_string.dart';
 import 'package:pokedex/services/format_pokedex_id.dart';
+import 'package:pokedex/services/pokeapi_co.dart';
 import 'package:pokedex/services/type_color.dart';
 import 'package:pokedex/widgets/pokemon_types.dart';
 
@@ -23,7 +22,7 @@ class _PokeDexEntryListState extends State<PokeDexEntryList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: fetchPokemon(),
+      future: fetchPokemon(widget.pokemon),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Material(child: Center(child: CircularProgressIndicator()));
@@ -89,10 +88,5 @@ class _PokeDexEntryListState extends State<PokeDexEntryList> {
         );
       },
     );
-  }
-
-  Future fetchPokemon() async {
-    var result = await http.get(widget.pokemon);
-    return json.decode(result.body);
   }
 }
