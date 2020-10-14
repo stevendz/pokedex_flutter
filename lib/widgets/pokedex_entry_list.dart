@@ -79,8 +79,11 @@ class _PokeDexEntryListState extends State<PokeDexEntryList> {
                 width: 50,
                 height: 50,
                 padding: EdgeInsets.all(5),
-                child: SvgPicture.network(
-                  image,
+                child: Hero(
+                  tag: '$name image',
+                  child: SvgPicture.network(
+                    image,
+                  ),
                 ),
               ),
             ],

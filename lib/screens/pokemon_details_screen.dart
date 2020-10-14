@@ -63,9 +63,12 @@ class _PokemonDetailsScreenState extends State<PokemonDetailsScreen> {
               ),
             ),
             Expanded(
-              child: SvgPicture.network(
-                widget.image,
-                width: MediaQuery.of(context).size.width * .75,
+              child: Hero(
+                tag: '${widget.name} image',
+                child: SvgPicture.network(
+                  widget.image,
+                  width: MediaQuery.of(context).size.width * .75,
+                ),
               ),
             ),
           ],

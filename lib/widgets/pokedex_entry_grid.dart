@@ -71,6 +71,7 @@ class _PokeDexEntryGridState extends State<PokeDexEntryGrid> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 5),
                     PokemonTypes(types: types, displayRow: false),
                   ],
                 ),
@@ -79,8 +80,11 @@ class _PokeDexEntryGridState extends State<PokeDexEntryGrid> {
                 width: 85,
                 height: 85,
                 padding: EdgeInsets.all(5),
-                child: SvgPicture.network(
-                  image,
+                child: Hero(
+                  tag: '$name image',
+                  child: SvgPicture.network(
+                    image,
+                  ),
                 ),
               ),
             ],
