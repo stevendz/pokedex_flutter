@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:pokedex/screens/pokemon_details_screen.dart';
 import 'package:pokedex/services/capitalize_string.dart';
+import 'package:pokedex/services/format_pokedex_id.dart';
 import 'package:pokedex/services/type_color.dart';
+import 'package:pokedex/widgets/pokemon_types.dart';
 
 class PokeDexEntryList extends StatefulWidget {
   final String pokemon;
@@ -24,73 +27,65 @@ class _PokeDexEntryListState extends State<PokeDexEntryList> {
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Material(child: Center(child: CircularProgressIndicator()));
+        Map pokemon = snapshot.data;
         String image =
-            snapshot.data['sprites']['other']['dream_world']['front_default'];
-        String name = snapshot.data['species']['name'];
-        List types = snapshot.data['types'];
-        return Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            Container(
-              height: 50,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: getTypeColor(types[0]['type']['name']),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    capitalize(name),
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      shadows: [Shadow(blurRadius: 2, color: Colors.blueGrey)],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.only(top: 5),
-                      itemCount: types.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white30,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            margin: EdgeInsets.only(left: 5),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 3, horizontal: 10),
-                            child: Text(
-                              capitalize(
-                                types[index]['type']['name'],
-                              ),
-                              style: TextStyle(color: Colors.white, shadows: [
-                                Shadow(blurRadius: 2, color: Colors.blueGrey)
-                              ]),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                ],
+            pokemon['sprites']['other']['dream_world']['front_default'];
+        String name = pokemon['species']['name'];
+        List<String> types = [];
+        pokemon['types'].forEach((type) => types.add(type['type']['name']));
+        String primaryType = types[0];
+        String id = pokemon['id'].toString();
+        String pokedexId = formatPokedexId(id);
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PokemonDetailsScreen(
+                id: pokedexId,
+                image: image,
+                name: name,
+                primaryType: primaryType,
+                types: types,
               ),
             ),
-            Container(
-              width: 50,
-              height: 50,
-              padding: EdgeInsets.all(5),
-              child: SvgPicture.network(
-                image,
+          ),
+          child: Stack(
+            alignment: Alignment.bottomRight,
+            children: [
+              Container(
+                height: 50,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: getTypeColor(primaryType),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      capitalize(name),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(blurRadius: 2, color: Colors.blueGrey)
+                        ],
+                      ),
+                    ),
+                    PokemonTypes(types: types, displayRow: true),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                width: 50,
+                height: 50,
+                padding: EdgeInsets.all(5),
+                child: SvgPicture.network(
+                  image,
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

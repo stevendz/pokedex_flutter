@@ -14,6 +14,9 @@ Color getTypeColor(type) {
     'fighting': Color(0xffb46f6c),
     'psychic': Color(0xffe7bccb),
     'rock': Color(0xff938b66),
+    'ice': Color(0xffc4e9e8),
+    'dragon': Color(0xff8c7fd3),
+    'ghost': Color(0xff9383b0),
   };
   return types[type];
 }
