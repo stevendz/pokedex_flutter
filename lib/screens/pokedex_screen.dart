@@ -15,6 +15,9 @@ class _PokeDexScreenState extends State<PokeDexScreen> {
     return FutureBuilder(
       future: fetchPokemons(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error'));
+        }
         if (!snapshot.hasData)
           return Material(child: Center(child: CircularProgressIndicator()));
         return Scaffold(
@@ -45,7 +48,8 @@ class _PokeDexScreenState extends State<PokeDexScreen> {
               ? GridView.builder(
                   padding: EdgeInsets.all(15),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                    crossAxisCount:
+                        MediaQuery.of(context).size.width > 500 ? 4 : 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                     childAspectRatio: 1.35,

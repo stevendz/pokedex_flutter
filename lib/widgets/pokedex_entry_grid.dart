@@ -24,6 +24,9 @@ class _PokeDexEntryGridState extends State<PokeDexEntryGrid> {
     return FutureBuilder(
       future: fetchPokemon(widget.pokemon),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Error'));
+        }
         if (!snapshot.hasData)
           return Material(child: Center(child: CircularProgressIndicator()));
         Map pokemon = snapshot.data;
