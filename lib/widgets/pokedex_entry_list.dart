@@ -5,18 +5,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/services/capitalize_string.dart';
 import 'package:pokedex/services/type_color.dart';
 
-class PokeDexEntry extends StatefulWidget {
+class PokeDexEntryList extends StatefulWidget {
   final String pokemon;
-  const PokeDexEntry({
+  const PokeDexEntryList({
     Key key,
     this.pokemon,
   }) : super(key: key);
 
   @override
-  _PokeDexEntryState createState() => _PokeDexEntryState();
+  _PokeDexEntryListState createState() => _PokeDexEntryListState();
 }
 
-class _PokeDexEntryState extends State<PokeDexEntry> {
+class _PokeDexEntryListState extends State<PokeDexEntryList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -32,14 +32,14 @@ class _PokeDexEntryState extends State<PokeDexEntry> {
           alignment: Alignment.bottomRight,
           children: [
             Container(
-              width: double.infinity,
+              height: 50,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: getTypeColor(types[0]['type']['name']),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     capitalize(name),
@@ -51,18 +51,19 @@ class _PokeDexEntryState extends State<PokeDexEntry> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.only(top: 10),
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.only(top: 5),
                       itemCount: types.length,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return Align(
-                          alignment: Alignment.topLeft,
+                          alignment: Alignment.topCenter,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white30,
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            margin: EdgeInsets.only(bottom: 3),
+                            margin: EdgeInsets.only(left: 5),
                             padding: EdgeInsets.symmetric(
                                 vertical: 3, horizontal: 10),
                             child: Text(
@@ -82,8 +83,8 @@ class _PokeDexEntryState extends State<PokeDexEntry> {
               ),
             ),
             Container(
-              width: 85,
-              height: 85,
+              width: 50,
+              height: 50,
               padding: EdgeInsets.all(5),
               child: SvgPicture.network(
                 image,

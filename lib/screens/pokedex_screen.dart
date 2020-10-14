@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:pokedex/widgets/pokedex_entry.dart';
+import 'package:pokedex/widgets/pokedex_entry_grid.dart';
+import 'package:pokedex/widgets/pokedex_entry_list.dart';
 
 class PokeDexScreen extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ Future<List> fetchPokemons() async {
 }
 
 class _PokeDexScreenState extends State<PokeDexScreen> {
+  bool displayGrid = false;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -31,28 +33,48 @@ class _PokeDexScreenState extends State<PokeDexScreen> {
             ),
             actions: [
               IconButton(
-                  icon: Icon(
-                    Icons.list,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {})
+                icon: Icon(
+                  displayGrid ? Icons.view_list : Icons.view_module,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  setState(
+                    () {
+                      displayGrid = !displayGrid;
+                    },
+                  );
+                },
+              ),
             ],
           ),
-          body: GridView.builder(
-            padding: EdgeInsets.all(15),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1.35,
-            ),
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return PokeDexEntry(
-                pokemon: snapshot.data[index]['url'],
-              );
-            },
-          ),
+          body: displayGrid
+              ? GridView.builder(
+                  padding: EdgeInsets.all(15),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.35,
+                  ),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return PokeDexEntryGrid(
+                      pokemon: snapshot.data[index]['url'],
+                    );
+                  },
+                )
+              : ListView.builder(
+                  padding: EdgeInsets.all(15),
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: PokeDexEntryList(
+                        pokemon: snapshot.data[index]['url'],
+                      ),
+                    );
+                  },
+                ),
         );
       },
     );
